@@ -3,8 +3,8 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
-import kotlin.math.max
-import kotlin.math.sqrt
+import kotlin.math.*
+
 
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
 // Максимальное количество баллов = 6
@@ -68,7 +68,18 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+    var years = ""
+    if ((age % 10 == 1) && (age % 100 != 11)) {
+        years = "$age год"
+    } else if ((age % 10 in 2..4) && !(age % 100 in 12..14)) {
+        years = "$age года"
+    } else {
+        years = "$age лет"
+    }
+    return years
+}
+
 
 /**
  * Простая (2 балла)
@@ -78,10 +89,19 @@ fun ageDescription(age: Int): String = TODO()
  * Определить, за какое время он одолел первую половину пути?
  */
 fun timeForHalfWay(
-    t1: Double, v1: Double,
-    t2: Double, v2: Double,
-    t3: Double, v3: Double
-): Double = TODO()
+    t1: Double, v1: Double, t2: Double, v2: Double, t3: Double, v3: Double
+): Double {
+    var time = 0.0
+    val s = (t1 * v1 + t2 * v2 + t3 * v3) / 2
+    if (s < t1 * v1) {
+        time = s / v1
+    } else if (s < t2 * v2 + t1 * v1) {
+        time = t1 + ((s - t1 * v1) / v2)
+    } else {
+        time = t1 + t2 + ((s - t1 * v1 - t2 * v2) / v3)
+    }
+    return time
+}
 
 /**
  * Простая (2 балла)
@@ -93,10 +113,20 @@ fun timeForHalfWay(
  * Считать, что ладьи не могут загораживать друг друга
  */
 fun whichRookThreatens(
-    kingX: Int, kingY: Int,
-    rookX1: Int, rookY1: Int,
-    rookX2: Int, rookY2: Int
-): Int = TODO()
+    kingX: Int, kingY: Int, rookX1: Int, rookY1: Int, rookX2: Int, rookY2: Int
+): Int {
+    var king = 0
+    if ((kingX == rookX1) || (kingY == rookY1)) {
+        if ((kingX == rookX2) || (kingY == rookY2)) {
+            king = 3
+        } else {
+            king = 1
+        }
+    } else if ((kingX == rookX2) || (kingY == rookY2)) {
+        king = 2
+    }
+    return king
+}
 
 /**
  * Простая (2 балла)
@@ -108,11 +138,22 @@ fun whichRookThreatens(
  * и 3, если угроза есть и от ладьи и от слона.
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
+
 fun rookOrBishopThreatens(
-    kingX: Int, kingY: Int,
-    rookX: Int, rookY: Int,
-    bishopX: Int, bishopY: Int
-): Int = TODO()
+    kingX: Int, kingY: Int, rookX: Int, rookY: Int, bishopX: Int, bishopY: Int
+): Int {
+    var king = 0
+    if ((kingX == rookX) || (kingY == rookY)) {
+        if (abs(kingX - bishopX) == abs(kingY - bishopY)) {
+            king = 3
+        } else {
+            king = 1
+        }
+    } else if (abs(kingX - bishopX) == abs(kingY - bishopY)) {
+        king = 2
+    }
+    return king
+}
 
 /**
  * Простая (2 балла)
@@ -122,7 +163,18 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val a1 = a * a
+    val b1 = b * b
+    val c1 = c * c
+    return when {
+        (a + b <= c) || (a + c <= b) || (b + c <= a) -> -1
+        (a1 + b1 < c1) || (a1 + c1 < b1) || (b1 + c1 < a1) -> 2
+        (a1 + b1 == c1) || (a1 + c1 == b1) || (b1 + c1 == a1) -> 1
+        else -> 0
+    }
+}
 
 /**
  * Средняя (3 балла)
@@ -132,4 +184,14 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    var length = 0
+    if (c > b) length = -1
+    else if ((d in a..b) && (c in a..b)) length = d - c
+    else if ((b in c..d) && (a in c..d)) length = b - a
+    else if ((a <= c) && (b <= d)) length = b - c
+    else if ((c < a) && (d >= a)) length = d - a
+    else length = -1
+    return length
+}
+
