@@ -2,7 +2,7 @@
 
 package lesson3.task1
 
-import kotlin.math.sqrt
+import kotlin.math.*
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -72,7 +72,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int = if (n < 10) 1 else 1 + digitNumber(n / 10)
 
 /**
  * Простая (2 балла)
@@ -80,21 +80,41 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    return if (n <= 2) 1
+    else {
+        var a = 1
+        var b = 1
+        var ans = 0
+        for (i in 3..n) {
+            ans = a + b
+            a = b
+            b = ans
+        }
+        ans
+    }
+}
 
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    for (i in 2..sqrt(n.toDouble()).toInt()) {
+        if (n % i == 0) {
+            return i
+        }
+    }
+    return n
+}
 
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая (2 балла)
@@ -112,7 +132,16 @@ fun maxDivisor(n: Int): Int = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var counter = 0
+    var n = x
+    while (n != 1) {
+        counter++
+        if (n % 2 == 0) n /= 2
+        else n = 3 * n + 1
+    }
+    return counter
+}
 
 /**
  * Средняя (3 балла)
@@ -120,7 +149,17 @@ fun collatzSteps(x: Int): Int = TODO()
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = TODO()
+fun lcm(m: Int, n: Int): Int {
+    var common = 1
+    for (i in 2..sqrt(maxOf(m, n).toDouble()).toInt()) {
+        if (!isPrime(i)) continue
+        do common *= i
+        while ((m % common == 0) && (n % common == 0))
+        common /= i
+    }
+    if (m != n) return m * n / common
+    return m
+}
 
 /**
  * Средняя (3 балла)
@@ -129,7 +168,14 @@ fun lcm(m: Int, n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    if (maxOf(m, n) % minOf(m, n) == 0) return false
+    for (i in 2..sqrt(maxOf(m, n).toDouble()).toInt()) {
+        if (!isPrime(i)) continue
+        if ((m % i == 0) && (n % i == 0)) return false
+    }
+    return true
+}
 
 /**
  * Средняя (3 балла)
@@ -138,7 +184,14 @@ fun isCoPrime(m: Int, n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var ans = 0
+    val total = digitNumber(n) - 1
+    for (i in 0..total) {
+        ans += ((n / 10.0.pow(i).toInt()) % 10) * 10.0.pow(total - i).toInt()
+    }
+    return ans
+}
 
 /**
  * Средняя (3 балла)
@@ -149,7 +202,7 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = revert(n) == n
 
 /**
  * Средняя (3 балла)
@@ -159,7 +212,16 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var past = n % 10
+    var next: Int
+    for (i in 1 until digitNumber(n)) {
+        next = (n / 10.0.pow(i).toInt()) % 10
+        if (next != past) return true
+        past = next
+    }
+    return false
+}
 
 /**
  * Средняя (4 балла)
@@ -170,7 +232,18 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var number: Double
+    var counter = 0
+    var ans = 0.0
+    val x1 = x % (2 * PI)
+    do {
+        number = x1.pow(counter * 2 + 1) / factorial(counter * 2 + 1)
+        ans += (-1.0).pow(counter) * number
+        counter += 1
+    } while (number >= eps)
+    return ans
+}
 
 /**
  * Средняя (4 балла)
@@ -181,18 +254,39 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var number = Double.MAX_VALUE
+    var counter = 0
+    var ans = 0.0
+    val x1 = x % (2 * PI)
+    while (number >= eps) {
+        number = x1.pow(counter * 2) / factorial(counter * 2)
+        ans += (-1.0).pow(counter) * number
+        counter += 1
+    }
+    return ans
+}
 
 /**
  * Сложная (4 балла)
  *
- * Найти n-ю цифру последовательности из квадратов целых чисел:
+ * Найти n-ю цифру последовательности из квадратов целых чисел:f
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var counter = 0
+    var total = 0
+    while (n > total) {
+        counter += 1
+        total += digitNumber(counter.toDouble().pow(2).toInt())
+    }
+    val index = total - n
+    val number = counter.toDouble().pow(2).toInt()
+    return number / 10.0.pow(index).toInt() % 10
+}
 
 /**
  * Сложная (5 баллов)
@@ -203,4 +297,14 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var counter = 0
+    var total = 0
+    while (n > total) {
+        counter += 1
+        total += digitNumber(fib(counter))
+    }
+    val index = total - n
+    val number = fib(counter)
+    return number / 10.0.pow(index).toInt() % 10
+}

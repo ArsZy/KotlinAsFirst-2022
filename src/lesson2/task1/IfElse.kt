@@ -69,8 +69,8 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    (age % 10 == 1) && (age % 100 != 11) -> "$age год"
-    (age % 10 in 2..4) && !(age % 100 in 12..14) -> "$age года"
+    age % 10 == 1 && age % 100 != 11 -> "$age год"
+    age % 10 in 2..4 && age % 100 !in 12..14 -> "$age года"
     else -> "$age лет"
 }
 
@@ -131,9 +131,9 @@ fun whichRookThreatens(
 fun rookOrBishopThreatens(
     kingX: Int, kingY: Int, rookX: Int, rookY: Int, bishopX: Int, bishopY: Int
 ): Int = when {
-    ((kingX == rookX) || (kingY == rookY)) &&
+    (kingX == rookX || kingY == rookY) &&
             (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
-    (kingX == rookX) || (kingY == rookY) -> 1
+    kingX == rookX || kingY == rookY -> 1
     abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
     else -> 0
 }
@@ -152,9 +152,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val b1 = b * b
     val c1 = c * c
     return when {
-        (a + b <= c) || (a + c <= b) || (b + c <= a) -> -1
-        (a1 + b1 < c1) || (a1 + c1 < b1) || (b1 + c1 < a1) -> 2
-        (a1 + b1 == c1) || (a1 + c1 == b1) || (b1 + c1 == a1) -> 1
+        a + b <= c || a + c <= b || b + c <= a -> -1
+        a1 + b1 < c1 || a1 + c1 < b1 || b1 + c1 < a1 -> 2
+        a1 + b1 == c1 || a1 + c1 == b1 || b1 + c1 == a1 -> 1
         else -> 0
     }
 }
@@ -169,10 +169,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
     c > b -> -1
-    (d in a..b) && (c in a..b) -> d - c
-    (b in c..d) && (a in c..d) -> b - a
-    (a <= c) && (b <= d) -> b - c
-    (c < a) && (d >= a) -> d - a
+    d in a..b && c in a..b -> d - c
+    b in c..d && a in c..d -> b - a
+    a <= c && b <= d -> b - c
+    c < a && d >= a -> d - a
     else -> -1
 }
 
