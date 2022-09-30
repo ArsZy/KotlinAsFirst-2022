@@ -72,7 +72,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = if (n < 10) 1 else 1 + digitNumber(n / 10)
+fun digitNumber(n: Int): Int = if (abs(n) < 10) 1 else 1 + digitNumber(n / 10)
 
 /**
  * Простая (2 балла)
@@ -169,6 +169,7 @@ fun lcm(m: Int, n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
+    if (m == 1 && n == 1) return true
     if (maxOf(m, n) % minOf(m, n) == 0) return false
     for (i in 2..sqrt(maxOf(m, n).toDouble()).toInt()) {
         if (!isPrime(i)) continue
@@ -236,7 +237,9 @@ fun sin(x: Double, eps: Double): Double {
     var number: Double
     var counter = 0
     var ans = 0.0
-    val x1 = x % (2 * PI)
+    val x1: Double
+    if (x >= 0) x1 = x % (2 * PI)
+    else x1 = 2 * PI - abs(x % (2 * PI))
     do {
         number = x1.pow(counter * 2 + 1) / factorial(counter * 2 + 1)
         ans += (-1.0).pow(counter) * number
@@ -258,7 +261,9 @@ fun cos(x: Double, eps: Double): Double {
     var number = Double.MAX_VALUE
     var counter = 0
     var ans = 0.0
-    val x1 = x % (2 * PI)
+    val x1: Double
+    if (x >= 0) x1 = x % (2 * PI)
+    else x1 = 2 * PI - abs(x % (2 * PI))
     while (number >= eps) {
         number = x1.pow(counter * 2) / factorial(counter * 2)
         ans += (-1.0).pow(counter) * number
