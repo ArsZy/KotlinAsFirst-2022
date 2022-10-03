@@ -149,17 +149,16 @@ fun collatzSteps(x: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    var common = 1
-    for (i in 2..sqrt(maxOf(m, n).toDouble()).toInt()) {
-        if (!isPrime(i)) continue
-        do common *= i
-        while ((m % common == 0) && (n % common == 0))
-        common /= i
+fun multiple(a: Int, b: Int): Int {
+    var a1 = a
+    var b2 = b
+    while (a1 != b2) {
+        if (a1 > b2) a1 -= b2
+        else b2 -= a1
     }
-    if (m != n) return m * n / common
-    return m
+    return a1
 }
+fun lcm(m: Int, n: Int): Int = m * n / multiple(m, n)
 
 /**
  * Средняя (3 балла)
