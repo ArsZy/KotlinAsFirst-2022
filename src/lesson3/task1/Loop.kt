@@ -170,7 +170,7 @@ fun lcm(m: Int, n: Int): Int = m * n / multiple(m, n)
 fun isCoPrime(m: Int, n: Int): Boolean {
     if (m == 1 || n == 1) return true
     if (maxOf(m, n) % minOf(m, n) == 0) return false
-    for (i in 2..sqrt(maxOf(m, n).toDouble()).toInt()) {
+    for (i in 2..sqrt(minOf(m, n).toDouble()).toInt() step 2) {
         if (!isPrime(i)) continue
         if ((m % i == 0) && (n % i == 0)) return false
     }
