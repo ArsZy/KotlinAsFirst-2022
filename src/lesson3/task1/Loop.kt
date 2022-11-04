@@ -167,16 +167,7 @@ fun lcm(m: Int, n: Int): Int = m * n / multiple(m, n)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    if (m == 1 || n == 1) return true
-    if (maxOf(m, n) % minOf(m, n) == 0 ||
-        (m % 2 == 0) && (n % 2 == 0)) return false
-    for (i in 3..sqrt(minOf(m, n).toDouble()).toInt() step 2) {
-        if (!isPrime(i)) continue
-        if ((m % i == 0) && (n % i == 0)) return false
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = multiple(m, n) == 1
 
 /**
  * Средняя (3 балла)
@@ -237,9 +228,8 @@ fun sin(x: Double, eps: Double): Double {
     var number: Double
     var counter = 0
     var ans = 0.0
-    val x1: Double
-    if (x >= 0) x1 = x % (2 * PI)
-    else x1 = 2 * PI - abs(x % (2 * PI))
+    val x1 = if (x >= 0) x % (2 * PI)
+    else 2 * PI - abs(x % (2 * PI))
     do {
         number = x1.pow(counter * 2 + 1) / factorial(counter * 2 + 1)
         ans += (-1.0).pow(counter) * number
@@ -261,9 +251,8 @@ fun cos(x: Double, eps: Double): Double {
     var number = Double.MAX_VALUE
     var counter = 0
     var ans = 0.0
-    val x1: Double
-    if (x >= 0) x1 = x % (2 * PI)
-    else x1 = 2 * PI - abs(x % (2 * PI))
+    val x1 = if (x >= 0) x % (2 * PI)
+    else 2 * PI - abs(x % (2 * PI))
     while (number >= eps) {
         number = x1.pow(counter * 2) / factorial(counter * 2)
         ans += (-1.0).pow(counter) * number
