@@ -197,7 +197,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     }
     val ans = mutableMapOf<String, Double>()
     for ((name, grade) in res) {
-        ans[name] = grade.sum()/ grade.size
+        ans[name] = grade.sum() / grade.size
     }
     return ans.toMap()
 }
@@ -222,7 +222,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var minValue = Double.MAX_VALUE
     for ((name, grade) in stuff) {
         val (type, price) = grade
-        if (type == kind && price < minValue) {
+        if (type == kind && price <= minValue) {
             minValue = price
             ans = name
         }
