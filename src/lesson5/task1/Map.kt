@@ -166,12 +166,13 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val res = mutableMapOf<String, List<String>>()
-    for ((name, grade) in mapA) {
-        res[name] = res[name]?.plus(",$grade") ?: listOf(grade)
+    fun phoneBooks(mp: Map<String, String>, res: MutableMap<String, List<String>>) {
+        for ((name, grade) in mp) {
+            res[name] = res[name]?.plus(grade) ?: listOf(grade)
+        }
     }
-    for ((name, grade) in mapB) {
-        res[name] = res[name]?.plus(",$grade") ?: listOf(grade)
-    }
+    phoneBooks(mapA, res)
+    phoneBooks(mapB, res)
     val ans = mutableMapOf<String, String>()
     for ((name, grade) in res) {
         ans[name] = grade.toSet().joinToString()
@@ -189,7 +190,17 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val res = mutableMapOf<String, List<Double>>()
+    for ((name, grade) in stockPrices) {
+        res[name] = res[name]?.plus(grade) ?: listOf(grade)
+    }
+    val ans = mutableMapOf<String, Double>()
+    for ((name, grade) in res) {
+        ans[name] = grade.sum()/ grade.size
+    }
+    return ans.toMap()
+}
 
 /**
  * Средняя (4 балла)
@@ -206,7 +217,18 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var ans: String? = null
+    var minValue = Double.MAX_VALUE
+    for ((name, grade) in stuff) {
+        val (type, price) = grade
+        if (type == kind && price < minValue) {
+            minValue = price
+            ans = name
+        }
+    }
+    return ans
+}
 
 /**
  * Средняя (3 балла)

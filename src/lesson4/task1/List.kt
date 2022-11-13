@@ -263,14 +263,13 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    val abc = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+    val abc = "abcdefghigklmnopqrstuvwxyz"
     val notation = convert(n, base)
-    var ans = ""
-    for (i in notation.indices) {
-        val a = notation[i]
-        var b = a.toString()
-        if (a > 9) b = abc[a - 10]
-        ans += b
+    val ans = buildString {
+        for (i in notation.indices) {
+            val a = notation[i]
+            append(if (a > 9) abc[a - 10] else a.toString())
+        }
     }
     return ans
 }
@@ -304,14 +303,16 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     val abc = "abcdefghijklmnopqrstuvwxyz"
-    var b: Int
-    val ans = mutableListOf<Int>()
-    for (i in str.indices) {
-        b = if (str[i] in ("0123456789")) str[i].code - 48
-        else 10 + abc.indexOf(str[i])
-        ans.add(b)
+    val ans = buildString {
+        for (i in str) {
+            append(
+                if (i in ("0123456789")) i.code - 48
+                else 10 + abc.indexOf(i)
+            )
+            append(",")
+        }
     }
-    return decimal(ans, base)
+    return decimal(((ans.split(",") - "").map { it.toInt() }), base)
 }
 
 /**
@@ -322,7 +323,24 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    val romanNum = mapOf(
+        1 to "I", 4 to "IV", 5 to "V", 9 to "IX", 10 to "X", 40 to "XL", 50 to "L",
+        90 to "XC", 100 to "C", 400 to "CD", 500 to "D", 900 to "CM", 1000 to "M"
+    )
+    val ans = buildString {
+        var (number, key) = n to 0
+        do {
+            number -= key
+            key = 0
+            for (k in romanNum.keys) {
+                if (k in (key + 1)..number) key = k
+            }
+            append(romanNum[key])
+        } while (number != key)
+    }
+    return ans
+}
 
 /**
  * Очень сложная (7 баллов)
