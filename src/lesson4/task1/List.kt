@@ -263,7 +263,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    val abc = "abcdefghigklmnopqrstuvwxyz"
+    val abc = "abcdefghijklmnopqrstuvwxyz"
     val notation = convert(n, base)
     val ans = buildString {
         for (i in notation.indices) {
