@@ -138,7 +138,8 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    val firstPlust = phone[0].toString() == "+"
+    if (phone == "") return ""
+    val firstPlus = phone[0].toString() == "+"
     var key = false
     val ans = buildString {
         for (i in phone) {
@@ -149,7 +150,7 @@ fun flattenPhoneNumber(phone: String): String {
             if (!isNotNumber(i.toString())) append(i)
         }
     }
-    return if (firstPlust) "+$ans"
+    return if (firstPlus) "+$ans"
     else ans
 }
 
