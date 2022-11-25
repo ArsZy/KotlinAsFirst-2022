@@ -76,6 +76,13 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+fun isNotNumber(s: String): Boolean {
+    return when (s.toIntOrNull()) {
+        null -> true
+        else -> false
+    }
+}
+
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
     if (parts.size != 3) return ""
@@ -83,7 +90,7 @@ fun dateStrToDigit(str: String): String {
         "января", "февраля", "марта", "апреля", "мая", "июня",
         "июля", "августа", "сентября", "октября", "ноября", "декабря"
     )
-    if (parts[1] !in monthList) return ""
+    if (parts[1] !in monthList || isNotNumber(parts[0]) || isNotNumber(parts[2])) return ""
     val day = parts[0].toInt()
     val month = monthList.indexOf(parts[1]) + 1
     val year = parts[2].toInt()
@@ -102,21 +109,18 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    try {
-        val parts = digital.split(".")
-        if (parts.size != 3 || parts[1].toInt() !in 1..12) return ""
-        val monthList = listOf(
-            "января", "февраля", "марта", "апреля", "мая", "июня",
-            "июля", "августа", "сентября", "октября", "ноября", "декабря"
-        )
-        val day = parts[0].toInt()
-        val month = monthList[parts[1].toInt() - 1]
-        val year = parts[2].toInt()
-        if (day !in 1..daysInMonth(parts[1].toInt(), year)) return ""
-        return String.format("%d %s %d", day, month, year)
-    } catch (e: NumberFormatException) {
-        return ""
-    }
+    val parts = digital.split(".")
+    if (parts.size != 3 || isNotNumber(parts[0]) || isNotNumber(parts[1]) || isNotNumber(parts[2])) return ""
+    if (parts[1].toInt() !in 1..12) return ""
+    val monthList = listOf(
+        "января", "февраля", "марта", "апреля", "мая", "июня",
+        "июля", "августа", "сентября", "октября", "ноября", "декабря"
+    )
+    val day = parts[0].toInt()
+    val month = monthList[parts[1].toInt() - 1]
+    val year = parts[2].toInt()
+    if (day !in 1..daysInMonth(parts[1].toInt(), year)) return ""
+    return String.format("%d %s %d", day, month, year)
 }
 
 /**
@@ -133,7 +137,22 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val firstPlust = phone[0].toString() == "+"
+    var key = false
+    val ans = buildString {
+        for (i in phone) {
+            if (isNotNumber(i.toString()) && (i !in "+-() ")) return ""
+            if (i == '(') key = true
+            if (!isNotNumber(i.toString())) key = false
+            if (i == ')' && key) return ""
+            if (!isNotNumber(i.toString())) append(i)
+        }
+    }
+    return if (firstPlust) "+$ans"
+    else ans
+}
+
 
 /**
  * Средняя (5 баллов)

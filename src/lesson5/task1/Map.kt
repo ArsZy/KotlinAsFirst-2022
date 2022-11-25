@@ -165,15 +165,15 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
+fun phoneBooks(mp: Map<String, String>, res: MutableMap<String, List<String>>) {
+    for ((name, grade) in mp) {
+        res[name] = res[name]?.plus(grade) ?: listOf(grade)
+    }
+}
+
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val res = mutableMapOf<String, List<String>>()
-    fun phoneBooks(mp: Map<String, String>, res: MutableMap<String, List<String>>) {
-        for ((name, grade) in mp) {
-            res[name] = res[name]?.plus(grade) ?: listOf(grade)
-        }
-    }
-    phoneBooks(mapA, res)
-    phoneBooks(mapB, res)
+    phoneBooks(mapA, res); phoneBooks(mapB, res)
     val ans = mutableMapOf<String, String>()
     for ((name, grade) in res) {
         ans[name] = grade.toSet().joinToString()
@@ -200,7 +200,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     for ((name, grade) in res) {
         ans[name] = grade.sum() / grade.size
     }
-    return ans.toMap()
+    return ans
 }
 
 /**
