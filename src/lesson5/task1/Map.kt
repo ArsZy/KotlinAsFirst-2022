@@ -173,7 +173,8 @@ fun phoneBooks(mp: Map<String, String>, res: MutableMap<String, List<String>>) {
 
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val res = mutableMapOf<String, List<String>>()
-    phoneBooks(mapA, res); phoneBooks(mapB, res)
+    phoneBooks(mapA, res)
+    phoneBooks(mapB, res)
     val ans = mutableMapOf<String, String>()
     for ((name, grade) in res) {
         ans[name] = grade.toSet().joinToString()

@@ -138,7 +138,7 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (phone == "") return ""
+    if (phone.isEmpty()) return ""
     val firstPlus = phone[0].toString() == "+"
     var key = false
     val ans = buildString {
@@ -165,7 +165,19 @@ fun flattenPhoneNumber(phone: String): String {
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    if (jumps.isEmpty()) return -1
+    val listOfJumps = mutableListOf<Int>()
+    val splJumps = jumps.split(" ")
+    repeat(splJumps.size) {
+        splJumps.forEach {
+            if (isNotNumber(it) && (it !in "-%")) return -1
+            if (!isNotNumber(it)) listOfJumps.add(it.toInt())
+        }
+    }
+    if (listOfJumps.isEmpty()) return -1
+    return listOfJumps.max()
+}
 
 /**
  * Сложная (6 баллов)
