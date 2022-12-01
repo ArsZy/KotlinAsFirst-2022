@@ -171,7 +171,7 @@ fun bestLongJump(jumps: String): Int {
     val splJumps = jumps.split(" ")
     repeat(splJumps.size) {
         splJumps.forEach {
-            if (isNotNumber(it) && (it !in "-%")) return -1
+            if (isNotNumber(it) && it !in "-%") return -1
             if (!isNotNumber(it)) listOfJumps.add(it.toInt())
         }
     }
@@ -190,7 +190,17 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    if (jumps.isEmpty()) return -1
+    val listOfJumps = mutableListOf<Int>()
+    val splJumps = jumps.split(" ")
+    for (i in 0..splJumps.size - 2) {
+        if (isNotNumber(splJumps[i]) && splJumps[i][0] !in "-%+") return -1
+        if (!isNotNumber(splJumps[i]) && splJumps[i + 1] == "+") listOfJumps.add(splJumps[i].toInt())
+    }
+    if (listOfJumps.isEmpty()) return -1
+    return listOfJumps.max()
+}
 
 /**
  * Сложная (6 баллов)
