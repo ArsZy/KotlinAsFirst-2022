@@ -216,7 +216,7 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val e = IllegalArgumentException()
-    if (expression.isEmpty()) throw e
+    if (expression.none { !isNotNumber(it.toString()) }) throw e
     val splTerms = expression.split(" ")
     if (isNotNumberWithoutPM(splTerms[0]) || isNotNumberWithoutPM(splTerms[splTerms.size - 1])) throw e
     val listOfTerms = mutableListOf(splTerms[0].toInt())
