@@ -83,6 +83,11 @@ fun isNotNumber(s: String): Boolean {
     }
 }
 
+fun isNotNumberWithoutPM(s: String): Boolean {
+    if (s[0] in "+-") return true
+    return isNotNumber(s)
+}
+
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
     if (parts.size != 3) return ""
@@ -211,15 +216,19 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val e = IllegalArgumentException()
-    if (expression.isEmpty()) throw e
-    val listOfTerms = mutableListOf<Int>()
+    if (expression.isEmpty()) return 0
     val splTerms = expression.split(" ")
-    for (i in 0..splTerms.size - 2) {
-        if (isNotNumber(splTerms[i]) && splTerms[i][0] !in "-%+") return -1
-        if (!isNotNumber(splTerms[i]) && splTerms[i + 1] == "+") listOfTerms.add(splTerms[i].toInt())
+    if (isNotNumberWithoutPM(splTerms[0]) || isNotNumberWithoutPM(splTerms[splTerms.size - 1])) throw e
+    val listOfTerms = mutableListOf(splTerms[0].toInt())
+    for (i in 2..splTerms.size step 2) {
+        if (isNotNumberWithoutPM(splTerms[i])) throw e
+        if (!isNotNumberWithoutPM(splTerms[i]))
+            if (splTerms[i - 1] == "+") listOfTerms.add(splTerms[i].toInt())
+            else if (splTerms[i - 1] == "-") listOfTerms.add(-1 * splTerms[i].toInt())
+            else throw e
     }
-    if (listOfTerms.isEmpty()) return -1
-    return listOfTerms.max()
+    if (listOfTerms.size == 0) throw e
+    return listOfTerms.sum()
 }
 
 /**
