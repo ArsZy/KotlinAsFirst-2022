@@ -169,11 +169,9 @@ fun bestLongJump(jumps: String): Int {
     if (jumps.isEmpty()) return -1
     val listOfJumps = mutableListOf<Int>()
     val splJumps = jumps.split(" ")
-    repeat(splJumps.size) {
-        splJumps.forEach {
-            if (isNotNumber(it) && it !in "-%") return -1
-            if (!isNotNumber(it)) listOfJumps.add(it.toInt())
-        }
+    for (i in splJumps) {
+        if (isNotNumber(i) && i !in "-%") return -1
+        if (!isNotNumber(i)) listOfJumps.add(i.toInt())
     }
     if (listOfJumps.isEmpty()) return -1
     return listOfJumps.max()
@@ -211,7 +209,18 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val e = IllegalArgumentException()
+    if (expression.isEmpty()) throw e
+    val listOfTerms = mutableListOf<Int>()
+    val splTerms = expression.split(" ")
+    for (i in 0..splTerms.size - 2) {
+        if (isNotNumber(splTerms[i]) && splTerms[i][0] !in "-%+") return -1
+        if (!isNotNumber(splTerms[i]) && splTerms[i + 1] == "+") listOfTerms.add(splTerms[i].toInt())
+    }
+    if (listOfTerms.isEmpty()) return -1
+    return listOfTerms.max()
+}
 
 /**
  * Сложная (6 баллов)
