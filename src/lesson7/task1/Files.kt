@@ -155,12 +155,12 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     val lines = File(inputName).readLines()
-    File(outputName).bufferedWriter().use { out ->
+    File(outputName).bufferedWriter().use { output ->
         val maxLength = if (lines.isEmpty()) 0
         else lines.maxOf { it.trim().length }
         for (i in lines) {
             val line = i.trim()
-            out.appendLine(" ".repeat((maxLength - line.length) / 2) + line)
+            output.appendLine(" ".repeat((maxLength - line.length) / 2) + line)
         }
     }
 }
@@ -193,8 +193,26 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val lines = File(inputName).readLines().map { it.trim() }
+    File(outputName).bufferedWriter().use { output ->
+        val maxLength = if (lines.isEmpty()) 0
+        else lines.maxOf { it.length }
+        for (line in lines) {
+            val wordsInLine = line.split(Regex("""\s+""")).toMutableList()
+            if (wordsInLine.size == 1) output.appendLine(line)
+            else {
+                val indexLastWord = wordsInLine.lastIndex
+                val spaces = (maxLength - line.length) / indexLastWord + 1
+                val remain = (maxLength - line.length) % indexLastWord
+                for (i in 0 until indexLastWord) {
+                    wordsInLine[i] += " ".repeat(if (i < remain) spaces + 1 else spaces)
+                }
+                output.appendLine(wordsInLine.joinToString(""))
+            }
+        }
+    }
 }
+
 
 /**
  * Средняя (14 баллов)
