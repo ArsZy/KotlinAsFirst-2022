@@ -123,7 +123,8 @@ fun sibilants(inputName: String, outputName: String) {
     val replace = mapOf('Ы' to 'И', 'Я' to 'А', 'Ю' to 'У', 'ы' to 'и', 'я' to 'а', 'ю' to 'у')
     val letters = "ЖЧШЩжчшщ".toSet()
     File(outputName).bufferedWriter().use {
-        val result = buildString {
+        val result = if (text.isEmpty()) ""
+        else buildString {
             append(text[0])
             for (i in 1 until text.count()) {
                 if (text[i - 1] in letters && text[i] in replace) {
@@ -153,7 +154,15 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val lines = File(inputName).readLines()
+    File(outputName).bufferedWriter().use { out ->
+        val maxLength = if (lines.isEmpty()) 0
+        else lines.maxOf { it.trim().length }
+        for (i in lines) {
+            val line = i.trim()
+            out.appendLine(" ".repeat((maxLength - line.length) / 2) + line)
+        }
+    }
 }
 
 /**
