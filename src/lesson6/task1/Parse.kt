@@ -216,18 +216,14 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val e = IllegalArgumentException()
-    if (expression.none { !isNotNumber(it.toString()) }) throw e
+    if (!Regex("""\d+(\s+[+\-]\s+\d+)*""").matches(expression)) throw e
     val splTerms = expression.split(" ")
-    if (isNotNumberWithoutPM(splTerms[0]) || isNotNumberWithoutPM(splTerms[splTerms.size - 1])) throw e
     val listOfTerms = mutableListOf(splTerms[0].toInt())
     for (i in 2..splTerms.size step 2) {
-        if (isNotNumberWithoutPM(splTerms[i])) throw e
         if (!isNotNumberWithoutPM(splTerms[i]))
             if (splTerms[i - 1] == "+") listOfTerms.add(splTerms[i].toInt())
-            else if (splTerms[i - 1] == "-") listOfTerms.add(-1 * splTerms[i].toInt())
-            else throw e
+            else listOfTerms.add(-1 * splTerms[i].toInt())
     }
-    if (listOfTerms.size == 0) throw e
     return listOfTerms.sum()
 }
 

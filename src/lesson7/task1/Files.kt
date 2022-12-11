@@ -119,7 +119,20 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readText()
+    val replace = mapOf('Ы' to 'И', 'Я' to 'А', 'Ю' to 'У', 'ы' to 'и', 'я' to 'а', 'ю' to 'у')
+    val letters = "ЖЧШЩжчшщ".toSet()
+    File(outputName).bufferedWriter().use {
+        val result = buildString {
+            append(text[0])
+            for (i in 1 until text.count()) {
+                if (text[i - 1] in letters && text[i] in replace) {
+                    append(replace[text[i]])
+                } else append(text[i])
+            }
+        }
+        it.appendLine(result)
+    }
 }
 
 /**
