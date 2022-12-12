@@ -263,12 +263,11 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    val abc = "abcdefghijklmnopqrstuvwxyz"
     val notation = convert(n, base)
     val ans = buildString {
         for (i in notation.indices) {
             val a = notation[i]
-            append(if (a > 9) abc[a - 10] else a.toString())
+            append(if (a > 9) (a + 87).toChar().toString() else a.toString())
         }
     }
     return ans
@@ -302,12 +301,11 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val abc = "abcdefghijklmnopqrstuvwxyz"
     val ans = buildString {
         for (i in str) {
             append(
-                if (i in ("0123456789")) i.code - 48
-                else 10 + abc.indexOf(i)
+                if (i.isDigit()) i.toString().toInt()
+                else i.code - 87
             )
             append(",")
         }
@@ -332,10 +330,7 @@ fun roman(n: Int): String {
         var (number, key) = n to 0
         do {
             number -= key
-            key = 0
-            for (k in romanNum.keys) {
-                if (k in (key + 1)..number) key = k
-            }
+            key = romanNum.keys.filter { it <= number }.max()
             append(romanNum[key])
         } while (number != key)
     }

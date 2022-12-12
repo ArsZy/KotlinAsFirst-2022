@@ -95,6 +95,7 @@ fun countMatches(string: String, pattern: String): Int {
         }
     }
 }
+
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val text = File(inputName).readText().lowercase()
     val result = substrings.associateWith { 0 }.toMutableMap()
