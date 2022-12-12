@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.*
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -194,22 +195,26 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    val lines = File(inputName).readLines().map { it.trim() }
+    val lines = File(inputName).readLines().map { it.replace("\\s{2,}".toRegex(), " ").trim() }
+    val maxLength = if (lines.isEmpty()) 0
+    else lines.maxOf { it.length }
     File(outputName).bufferedWriter().use { output ->
-        val maxLength = if (lines.isEmpty()) 0
-        else lines.maxOf { it.length }
         for (line in lines) {
-            val wordsInLine = line.split(Regex("""\s+""")).toMutableList()
-            if (wordsInLine.size == 1) output.appendLine(line)
-            else {
-                val indexLastWord = wordsInLine.lastIndex
-                val spaces = (maxLength - line.length) / indexLastWord + 1
-                val remain = (maxLength - line.length) % indexLastWord
-                for (i in 0 until indexLastWord) {
-                    wordsInLine[i] += " ".repeat(if (i < remain) spaces + 1 else spaces)
+            val spaceLine = line.count { it == ' ' }
+            val spaceCount = floor((maxLength - line.length) / spaceLine.toDouble()).toInt()
+            var spaces = (maxLength - line.length) - spaceCount * spaceLine
+            val resultLine = buildString {
+                for (i in line) {
+                    if (i == ' ') {
+                        this.append(' ' + " ".repeat(spaceCount))
+                        if (spaces > 0) {
+                            this.append(' ')
+                            spaces--
+                        }
+                    } else this.append(i)
                 }
-                output.appendLine(wordsInLine.joinToString(""))
             }
+            output.appendLine(resultLine)
         }
     }
 }
