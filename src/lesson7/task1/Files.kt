@@ -2,7 +2,6 @@
 
 package lesson7.task1
 
-import ru.spbstu.wheels.joinToString
 import java.io.File
 import kotlin.math.*
 
@@ -243,15 +242,14 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  */
 fun top20Words(inputName: String): Map<String, Int> {
     val text = File(inputName).readText()
-    if (text.isEmpty()) return mapOf()
-    val parts = text.lowercase().split("[^a-zа-яё]+".toRegex()).filter { it.isNotEmpty() }
-    val sets = parts.toSet().associateWith { 0 }.toMutableMap()
-    val minn = List(20) { 0 }.toMutableList()
-    for ((key, value) in sets) {
-        sets[key] = parts.count { it == key }
-        if (minn.min() < sets[key]!!) minn[minn.indexOf(minn.min())] = sets[key]!!
+    val words = text.lowercase().split("[^a-zа-яё]+".toRegex()).filter { it.isNotEmpty() }
+    val map = words.toSet().associateWith { 0 }.toMutableMap()
+    val minLength = List(20) { 0 }.toMutableList()
+    for ((key, _) in map) {
+        map[key] = words.count { it == key }
+        if (minLength.min() < map[key]!!) minLength[minLength.indexOf(minLength.min())] = map[key]!!
     }
-    val ans = sets.filter { (key, value) -> value >= minn.min() }
+    val ans = map.filter { (_, value) -> value >= minLength.min() }
     return ans.toList().sortedByDescending { it.second }.toMap()
 }
 
@@ -323,15 +321,15 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val ans = mutableMapOf<String, Int>()
     File(outputName).bufferedWriter().use { output ->
         var leng: Int
-        var maxx = 0
+        var maxLength = 0
         for (word in words) {
             leng = word.length
-            if (word.lowercase().toSet().size == leng && maxx <= leng) {
+            if (word.lowercase().toSet().size == leng && maxLength <= leng) {
                 ans[word] = leng
-                maxx = leng
+                maxLength = leng
             }
         }
-        output.appendLine(ans.filter { (key, value) -> value == maxx }.keys.joinToString())
+        output.appendLine(ans.filter { (_, value) -> value == maxLength }.keys.joinToString())
     }
 }
 
