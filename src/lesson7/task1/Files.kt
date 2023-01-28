@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import ru.spbstu.wheels.joinToString
 import java.io.File
 import kotlin.math.*
 
@@ -240,7 +241,19 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val text = File(inputName).readText()
+    if (text.isEmpty()) return mapOf()
+    val parts = text.lowercase().split("[^a-zа-яё]+".toRegex()).filter { it.isNotEmpty() }
+    val sets = parts.toSet().associateWith { 0 }.toMutableMap()
+    val minn = List(20) { 0 }.toMutableList()
+    for ((key, value) in sets) {
+        sets[key] = parts.count { it == key }
+        if (minn.min() < sets[key]!!) minn[minn.indexOf(minn.min())] = sets[key]!!
+    }
+    val ans = sets.filter { (key, value) -> value >= minn.min() }
+    return ans.toList().sortedByDescending { it.second }.toMap()
+}
 
 /**
  * Средняя (14 баллов)
@@ -306,7 +319,20 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val words = File(inputName).readLines()
+    val ans = mutableMapOf<String, Int>()
+    File(outputName).bufferedWriter().use { output ->
+        var leng: Int
+        var maxx = 0
+        for (word in words) {
+            leng = word.length
+            if (word.lowercase().toSet().size == leng && maxx <= leng) {
+                ans[word] = leng
+                maxx = leng
+            }
+        }
+        output.appendLine(ans.filter { (key, value) -> value == maxx }.keys.joinToString())
+    }
 }
 
 /**
