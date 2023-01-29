@@ -267,7 +267,7 @@ fun convertToString(n: Int, base: Int): String {
     val ans = buildString {
         for (i in notation.indices) {
             val a = notation[i]
-            append(if (a > 9) (a + 87).toChar().toString() else a.toString())
+            append(if (a > 9) ('a' - 1 + a).toString() else a.toString())
         }
     }
     return ans
@@ -301,16 +301,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val ans = buildString {
-        for (i in str) {
-            append(
-                if (i.isDigit()) i.toString().toInt()
-                else i.code - 87
-            )
-            append(",")
-        }
+    val ans = mutableListOf<Int>()
+    for (i in str) {
+        if (i.isDigit()) ans.add(i.toString().toInt())
+        else ans.add(i.code - 87)
     }
-    return decimal(((ans.split(",") - "").map { it.toInt() }), base)
+    return decimal(ans, base)
 }
 
 /**

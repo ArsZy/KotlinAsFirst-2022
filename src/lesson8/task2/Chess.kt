@@ -25,7 +25,7 @@ data class Square(val column: Int, val row: Int) {
      * Для клетки не в пределах доски вернуть пустую строку
      */
     fun notation(): String {
-        return if (inside()) "${(96 + column).toChar()}$row"
+        return if (inside()) "${('a' - 1 + column)}$row"
         else ""
     }
 }
@@ -150,10 +150,9 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
     if (moves == 0) return listOf(start)
     if (moves == 1) return listOf(start, end)
     if (moves == 2) {
-        var temp: Square
         for (i in 1..8) {
             for (j in 1..8) {
-                temp = Square(i, j)
+                val temp = Square(i, j)
                 if (bishopMoveNumber(start, temp) == 1 && bishopMoveNumber(temp, end) == 1)
                     return listOf(start, temp, end)
             }

@@ -83,10 +83,6 @@ fun isNotNumber(s: String): Boolean {
     }
 }
 
-fun isNotNumberWithoutPM(s: String): Boolean {
-    if (s[0] in "+-") return true
-    return isNotNumber(s)
-}
 
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
@@ -215,14 +211,12 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val e = IllegalArgumentException()
-    if (!Regex("""\d+(\s+[+\-]\s+\d+)*""").matches(expression)) throw e
+    if (!Regex("""\d+(\s+[+\-]\s+\d+)*""").matches(expression)) throw IllegalArgumentException()
     val splTerms = expression.split(" ")
     val listOfTerms = mutableListOf(splTerms[0].toInt())
     for (i in 2..splTerms.size step 2) {
-        if (!isNotNumberWithoutPM(splTerms[i]))
-            if (splTerms[i - 1] == "+") listOfTerms.add(splTerms[i].toInt())
-            else listOfTerms.add(-1 * splTerms[i].toInt())
+        if (splTerms[i - 1] == "+") listOfTerms.add(splTerms[i].toInt())
+        else listOfTerms.add(-1 * splTerms[i].toInt())
     }
     return listOfTerms.sum()
 }
