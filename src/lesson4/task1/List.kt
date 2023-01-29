@@ -267,7 +267,7 @@ fun convertToString(n: Int, base: Int): String {
     val ans = buildString {
         for (i in notation.indices) {
             val a = notation[i]
-            append(if (a > 9) ('a' - 1 + a).toString() else a.toString())
+            append(if (a > 9) ('a' - 10 + a).toString() else a.toString())
         }
     }
     return ans
