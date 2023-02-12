@@ -243,7 +243,40 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+
+fun knightMoveNumber(start: Square, end: Square): Int {
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
+    if (start == end) return 0
+    val chessField = mutableMapOf<Square, Int>()
+    for (i in 1..8) {
+        for (j in 1..8) {
+            chessField[Square(i, j)] = -1
+        }
+    }
+    chessField[start] = 0
+    var temp = 0
+    while (chessField[end] == -1) {
+        for ((key, value) in chessField) {
+            if (value == temp) {
+                val nextMoves = listOf(
+                    Square(key.column + 2, key.row + 1),
+                    Square(key.column + 2, key.row - 1),
+                    Square(key.column - 2, key.row + 1),
+                    Square(key.column - 2, key.row - 1),
+                    Square(key.column + 1, key.row + 2),
+                    Square(key.column + 1, key.row - 2),
+                    Square(key.column - 1, key.row + 2),
+                    Square(key.column - 1, key.row - 2)
+                ).filter { chessField[it] == -1 }
+                for (i in nextMoves) {
+                    chessField[i] = temp + 1
+                }
+            }
+        }
+        temp++
+    }
+    return chessField[end]!!
+}
 
 /**
  * Очень сложная (10 баллов)
@@ -265,4 +298,43 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun knightTrajectory(start: Square, end: Square): List<Square> {
+    if (start == end) return listOf(start)
+    val chessField = mutableMapOf<Square, Square>()
+    for (i in 1..8) {
+        for (j in 1..8) {
+            chessField[Square(i, j)] = Square(-1, -1)
+        }
+    }
+    val moves = knightMoveNumber(start, end)
+    var temp = mutableListOf(start)
+    for (l in 1..moves) {
+        val nextTempMoves = mutableListOf<Square>()
+        for (j in 0 until temp.size) {
+            val nextMoves = listOf(
+                Square(temp[j].column + 2, temp[j].row + 1),
+                Square(temp[j].column + 2, temp[j].row - 1),
+                Square(temp[j].column - 2, temp[j].row + 1),
+                Square(temp[j].column - 2, temp[j].row - 1),
+                Square(temp[j].column + 1, temp[j].row + 2),
+                Square(temp[j].column + 1, temp[j].row - 2),
+                Square(temp[j].column - 1, temp[j].row + 2),
+                Square(temp[j].column - 1, temp[j].row - 2)
+            ).filter { it.inside() }
+            nextTempMoves += nextMoves
+            for (nextMove in nextMoves) {
+                if (chessField[nextMove] == Square(-1, -1))
+                    chessField[nextMove] = temp[j]
+            }
+        }
+        temp = nextTempMoves
+    }
+    val ans = mutableListOf<Square>()
+    var res = end
+    for (k in 1..moves) {
+        val move = chessField[res]!!
+        ans += move
+        res = move
+    }
+    return ans.reversed() + end
+}

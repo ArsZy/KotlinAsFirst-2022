@@ -304,7 +304,7 @@ fun decimalFromString(str: String, base: Int): Int {
     val ans = mutableListOf<Int>()
     for (i in str) {
         if (i.isDigit()) ans.add(i.toString().toInt())
-        else ans.add(i.code - 87)
+        else ans.add(i - 'a' + 10)
     }
     return decimal(ans, base)
 }
