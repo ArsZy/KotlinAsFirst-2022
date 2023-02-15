@@ -144,11 +144,12 @@ fun flattenPhoneNumber(phone: String): String {
     var key = false
     val ans = buildString {
         for (i in phone) {
-            if (isNotNumber(i.toString()) && (i !in "+-() ")) return ""
+            val notNum = isNotNumber(i.toString())
+            if (notNum && (i !in "+-() ")) return ""
             if (i == '(') key = true
-            if (!isNotNumber(i.toString())) key = false
+            if (!notNum) key = false
             if (i == ')' && key) return ""
-            if (!isNotNumber(i.toString())) append(i)
+            if (!notNum) append(i)
         }
     }
     return if (firstPlus) "+$ans"
